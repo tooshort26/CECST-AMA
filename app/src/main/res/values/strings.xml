@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">AttendanceMonitoring</string>
+    <string name="login_using_facial_recognition">Login using facial Recognition</string>
+    <string name="login_using_finger_print">Login using Finger Print</string>
+
+    <string name="drawer_open">Open navigation drawer</string>
+    <string name="drawer_close">Close navigation drawer</string>
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
