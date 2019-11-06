@@ -1,5 +1,6 @@
 package com.example.attendancemonitoring;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
@@ -21,6 +22,8 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 
+import me.aflak.bluetooth.Bluetooth;
+
 public class DashboardActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
@@ -32,7 +35,7 @@ public class DashboardActivity extends AppCompatActivity {
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://192.168.1.5:3030");
+            mSocket = IO.socket("http://192.168.1.11:3030");
         } catch (URISyntaxException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -42,6 +45,9 @@ public class DashboardActivity extends AppCompatActivity {
         JSONObject data = (JSONObject) args[0];
         Toast.makeText(DashboardActivity.this, String.valueOf(data), Toast.LENGTH_LONG).show();
     });
+
+    private Bluetooth bluetooth;
+
 
 
 
@@ -72,19 +78,47 @@ public class DashboardActivity extends AppCompatActivity {
 
         mSocket.connect();
         mSocket.on("sample", onNewMessage);
-        this.isConnect();
+
+        findViewById(R.id.btnSendToServer).setOnClickListener(v -> {
+            mSocket.emit("student-publish", "This is a sample for you server!");
+        });
+
+//        bluetooth = new Bluetooth(this);
+//        bluetooth.setBluetoothCallback(bluetoothCallback);
+
     }
 
+    /*@Override
+    protected void onStart() {
+        super.onStart();
+        bluetooth.onStart();
+        if(bluetooth.isEnabled()){
+            Toast.makeText(this, "Bluetooth is on", Toast.LENGTH_SHORT).show();
+            // Pair the device or automatically send.
 
-    private int isConnect()
-    {
-        if  (mSocket.connected()) {
-            Toast.makeText(this, "Socket is now connected", Toast.LENGTH_SHORT).show();
-            return 0;
+        } else {
+            bluetooth.enable();
         }
-        return this.isConnect();
+    }*/
+
+    /*@Override
+    protected void onStop() {
+        super.onStop();
+        bluetooth.onStop();
     }
 
+    private BluetoothCallback bluetoothCallback = new BluetoothCallback() {
+        @Override public void onBluetoothTurningOn() {}
+        @Override public void onBluetoothTurningOff() {}
+        @Override public void onBluetoothOff() {}
+        @Override public void onUserDeniedActivation() {}
+
+        @Override
+        public void onBluetoothOn() {
+            // doStuffWhenBluetoothOn() ...
+        }
+    };
+*/
 
     // `onPostCreate` called when activity start-up is complete after `onStart()`
     // NOTE 1: Make sure to override the method with only a single `Bundle` argument
@@ -121,30 +155,39 @@ public class DashboardActivity extends AppCompatActivity {
     public void selectDrawerItem(MenuItem menuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
-        Class fragmentClass;
+        Class fragmentClass = FirstFragment.class;
+        boolean isFragment = false;
         switch(menuItem.getItemId()) {
-            case R.id.nav_first_fragment:
-                fragmentClass = FirstFragment.class;
+            case R.id.nav_attendance:
+                Intent intent = new Intent(this, AttendanceActivity.class);
+                startActivity(intent);
                 break;
             case R.id.nav_second_fragment:
                 fragmentClass = SecondFragment.class;
+                isFragment = true;
                 break;
             case R.id.nav_third_fragment:
                 fragmentClass = ThirdFragment.class;
+                isFragment = true;
                 break;
             default:
                 fragmentClass = FirstFragment.class;
+                isFragment = true;
         }
 
-        try {
-            fragment = (Fragment) fragmentClass.newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
+        if  (isFragment) {
+            try {
+                fragment = (Fragment) fragmentClass.newInstance();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
         }
 
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.flContent, fragment).commit();
+
 
         // Highlight the selected item has been done by NavigationView
         menuItem.setChecked(true);
@@ -162,5 +205,7 @@ public class DashboardActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 
 }

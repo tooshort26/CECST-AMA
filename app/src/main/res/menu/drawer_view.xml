@@ -4,6 +4,10 @@
         <!--            android:icon="@drawable/ic_one"-->
 
         <item
+            android:id="@+id/nav_attendance"
+            android:title="Attendance" />
+
+        <item
             android:id="@+id/nav_first_fragment"
             android:title="First" />
 
