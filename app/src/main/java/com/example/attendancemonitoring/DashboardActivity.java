@@ -13,6 +13,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.attendancemonitoring.Repositories.UserRepository;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -23,11 +24,15 @@ import org.json.JSONObject;
 import java.net.URISyntaxException;
 
 import me.aflak.bluetooth.Bluetooth;
+import me.aflak.bluetooth.interfaces.BluetoothCallback;
 
 public class DashboardActivity extends AppCompatActivity {
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
+
+
+    private Bluetooth bluetooth;
 
     private ActionBarDrawerToggle drawerToggle;
 
@@ -35,7 +40,7 @@ public class DashboardActivity extends AppCompatActivity {
     private Socket mSocket;
     {
         try {
-            mSocket = IO.socket("http://192.168.1.11:3030");
+            mSocket = IO.socket("http://192.168.1.4:3030");
         } catch (URISyntaxException e) {
             Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -45,8 +50,6 @@ public class DashboardActivity extends AppCompatActivity {
         JSONObject data = (JSONObject) args[0];
         Toast.makeText(DashboardActivity.this, String.valueOf(data), Toast.LENGTH_LONG).show();
     });
-
-    private Bluetooth bluetooth;
 
 
 
@@ -77,18 +80,17 @@ public class DashboardActivity extends AppCompatActivity {
         mDrawer.addDrawerListener(drawerToggle);
 
         mSocket.connect();
-        mSocket.on("sample", onNewMessage);
+//        mSocket.on("sample", onNewMessage);
 
-        findViewById(R.id.btnSendToServer).setOnClickListener(v -> {
-            mSocket.emit("student-publish", "This is a sample for you server!");
-        });
 
-//        bluetooth = new Bluetooth(this);
-//        bluetooth.setBluetoothCallback(bluetoothCallback);
+        bluetooth = new Bluetooth(this);
+        bluetooth.setBluetoothCallback(bluetoothCallback);
 
     }
 
-    /*@Override
+
+
+    @Override
     protected void onStart() {
         super.onStart();
         bluetooth.onStart();
@@ -99,9 +101,9 @@ public class DashboardActivity extends AppCompatActivity {
         } else {
             bluetooth.enable();
         }
-    }*/
+    }
 
-    /*@Override
+    @Override
     protected void onStop() {
         super.onStop();
         bluetooth.onStop();
@@ -118,7 +120,6 @@ public class DashboardActivity extends AppCompatActivity {
             // doStuffWhenBluetoothOn() ...
         }
     };
-*/
 
     // `onPostCreate` called when activity start-up is complete after `onStart()`
     // NOTE 1: Make sure to override the method with only a single `Bundle` argument
@@ -155,7 +156,7 @@ public class DashboardActivity extends AppCompatActivity {
     public void selectDrawerItem(MenuItem menuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
-        Class fragmentClass = FirstFragment.class;
+        Class fragmentClass = ActivityFragment.class;
         boolean isFragment = false;
         switch(menuItem.getItemId()) {
             case R.id.nav_attendance:
@@ -171,7 +172,7 @@ public class DashboardActivity extends AppCompatActivity {
                 isFragment = true;
                 break;
             default:
-                fragmentClass = FirstFragment.class;
+                fragmentClass = ActivityFragment.class;
                 isFragment = true;
         }
 

@@ -17,12 +17,8 @@
             layout="@layout/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
-        <Button
-            android:id="@+id/btnSendToServer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="SEND TO SERVER"
-            />
+
+
         <!-- The main content view where fragments are loaded -->
         <FrameLayout
             android:id="@+id/flContent"
