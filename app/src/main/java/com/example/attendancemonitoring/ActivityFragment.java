@@ -9,12 +9,11 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-
 import com.example.attendancemonitoring.Adapters.ActivityAdapter;
+import com.example.attendancemonitoring.DatabaseModules.DB;
 import com.example.attendancemonitoring.DatabaseModules.Models.Attendance;
 
 import java.util.ArrayList;
@@ -45,15 +44,8 @@ public class ActivityFragment extends Fragment  {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Attendance attendance = new Attendance();
-        attendance.setName("Sample");
-        attendance.setDescription("Sample for description");
-        attendance.setStart("01/06/1997");
-        attendance.setEnd("01/06/1997");
-
-        attendanceList.add(0, attendance);
-
-//        this.buildRecyclerView(view);
+        attendanceList = DB.getInstance(getContext()).attendanceDao().getAttendance();
+        this.buildRecyclerView(view);
     }
 
     private void buildRecyclerView(View view) {
@@ -62,10 +54,7 @@ public class ActivityFragment extends Fragment  {
 
         recyclerView = view.findViewById(R.id.recycler_view);
 
-        recyclerView.addItemDecoration(
-                new DividerItemDecoration(getContext(),
-                        LinearLayoutManager.VERTICAL)
-        );
+        //recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),0));
 
 
         layoutManager = new LinearLayoutManager(getContext());

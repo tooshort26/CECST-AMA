@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-    <group android:checkableBehavior="single">
-        <!--            android:icon="@drawable/ic_one"-->
-
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu_top">
         <item
             android:id="@+id/nav_attendance"
-            android:title="Attendance" />
+            android:icon="@drawable/ic_camera_black_24dp"
+            android:title="@string/attendance" />
 
         <item
             android:id="@+id/nav_first_fragment"
-            android:title="First" />
-
-        <!--            android:icon="@drawable/ic_two"-->
-
-        <item
-            android:id="@+id/nav_second_fragment"
-            android:title="Second" />
-
-        <!--            android:icon="@drawable/ic_three"-->
-
-        <item
-            android:id="@+id/nav_third_fragment"
-            android:title="Third" />
+            android:icon="@drawable/ic_view_list_black_24dp"
+            android:title="@string/attended_activities" />
     </group>
+
+    <group android:id="@+id/menu_bottom"
+        android:checkableBehavior="none"
+        >
+
+        <item
+            android:id="@+id/sample2"
+            android:icon="@drawable/ic_settings_black_24dp"
+            android:title="@string/settings" />
+    </group>
+
 </menu>

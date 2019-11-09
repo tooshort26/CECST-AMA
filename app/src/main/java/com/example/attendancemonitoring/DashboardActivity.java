@@ -4,16 +4,21 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.example.attendancemonitoring.Repositories.UserRepository;
+import com.example.attendancemonitoring.DatabaseModules.DB;
+import com.example.attendancemonitoring.DatabaseModules.Models.User;
+import com.example.attendancemonitoring.Helpers.Strings;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
@@ -27,6 +32,7 @@ import me.aflak.bluetooth.Bluetooth;
 import me.aflak.bluetooth.interfaces.BluetoothCallback;
 
 public class DashboardActivity extends AppCompatActivity {
+
     private DrawerLayout mDrawer;
     private Toolbar toolbar;
     private NavigationView nvDrawer;
@@ -64,7 +70,16 @@ public class DashboardActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+
         nvDrawer = findViewById(R.id.nvView);
+        // Set the header name of navigation to the current user.
+        NavigationView navigationView = findViewById(R.id.nvView);
+        View hView =  navigationView.getHeaderView(0);
+        TextView navUsername = hView.findViewById(R.id.userName);
+        User user = DB.getInstance(getApplicationContext()).userDao().getUser();
+        String userName = Strings.capitalize(user.getFirstname()) + " " + Strings.capitalize(user.getMiddlename())  + " " + Strings.capitalize(user.getLastname());
+        navUsername.setText(userName);
+
         // Setup drawer view
         setupDrawerContent(nvDrawer);
 
@@ -89,16 +104,23 @@ public class DashboardActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure you want to exit the app?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", (dialog, id) -> DashboardActivity.super.onBackPressed())
+                .setNegativeButton("No", (dialog, id) -> dialog.cancel());
+        AlertDialog alert = builder.create();
+        alert.show();
+//        super.onBackPressed();
+    }
 
     @Override
     protected void onStart() {
         super.onStart();
         bluetooth.onStart();
-        if(bluetooth.isEnabled()){
-            Toast.makeText(this, "Bluetooth is on", Toast.LENGTH_SHORT).show();
-            // Pair the device or automatically send.
-
-        } else {
+        if(!bluetooth.isEnabled()){
             bluetooth.enable();
         }
     }
@@ -162,14 +184,6 @@ public class DashboardActivity extends AppCompatActivity {
             case R.id.nav_attendance:
                 Intent intent = new Intent(this, AttendanceActivity.class);
                 startActivity(intent);
-                break;
-            case R.id.nav_second_fragment:
-                fragmentClass = SecondFragment.class;
-                isFragment = true;
-                break;
-            case R.id.nav_third_fragment:
-                fragmentClass = ThirdFragment.class;
-                isFragment = true;
                 break;
             default:
                 fragmentClass = ActivityFragment.class;

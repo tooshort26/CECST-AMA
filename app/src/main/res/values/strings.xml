@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">AttendanceMonitoring</string>
+    <string name="app_name">CECST Attendance Monitoring</string>
     <string name="login_using_facial_recognition">Login using facial Recognition</string>
     <string name="login_using_finger_print">Login using Finger Print</string>
 
@@ -7,4 +7,29 @@
     <string name="drawer_close">Close navigation drawer</string>
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="attended_activities">Attended Activities</string>
+    <string name="attendance">Attendance</string>
+    <string name="splash_screen_text">CECST Activity Attendance</string>
+    <string name="register_message">For you to start using this application you must field those fields</string>
+    <string name="settings">Settings</string>
+    <string name="idNumber">Please check your id number</string>
+    <string name="firstName">Please check your firstname</string>
+    <string name="middleName">Please check your middlename</string>
+    <string name="lastName">Please check your lastname</string>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="messages_header">Messages</string>
+    <string name="sync_header">Sync</string>
+
+    <!-- Messages Preferences -->
+    <string name="signature_title">Your signature</string>
+    <string name="reply_title">Default reply action</string>
+
+    <!-- Sync Preferences -->
+    <string name="sync_title">Sync email periodically</string>
+    <string name="attachment_title">Download incoming attachments</string>
+    <string name="attachment_summary_on">Automatically download attachments for incoming emails
+    </string>
+    <string name="attachment_summary_off">Only download attachments when manually requested</string>
 </resources>

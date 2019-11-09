@@ -30,8 +30,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Attend
     @Override
     public void onBindViewHolder(AttendanceHolder holder, int position) {
         Attendance attendance = list_attendance.get(position);
-        holder.name.setText(attendance.getName());
-        holder.description.setText(attendance.getDescription());
+        holder.name.setText(String.format("%s\n%s (%s - %s)", attendance.getName(), attendance.getDescription(), attendance.getStart(), attendance.getEnd()));
     }
 
     @Override
@@ -43,13 +42,11 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Attend
 
     class AttendanceHolder extends RecyclerView.ViewHolder {
         TextView name;
-        TextView description;
 
         public AttendanceHolder(View itemView) {
             super(itemView);
 
             name = itemView.findViewById(R.id.name);
-            description = itemView.findViewById(R.id.description);
         }
     }
 }

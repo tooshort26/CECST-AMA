@@ -1,12 +1,15 @@
 package com.example.attendancemonitoring;
 
 import android.Manifest;
+import android.content.Intent;
 import android.os.Bundle;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.attendancemonitoring.DatabaseModules.Models.Attendance;
+import com.example.attendancemonitoring.Repositories.AttendanceRepository;
 import com.google.zxing.Result;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.PermissionToken;
@@ -54,6 +57,13 @@ public class AttendanceActivity extends AppCompatActivity implements ZXingScanne
     }
 
     @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, DashboardActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+    }
+
+    @Override
     protected void onDestroy() {
         scannerView.stopCamera();
         super.onDestroy();
@@ -63,5 +73,16 @@ public class AttendanceActivity extends AppCompatActivity implements ZXingScanne
     public void handleResult(Result rawResult) {
         // Receive the result
         textResult.setText(rawResult.getText());
+        // Send to bluetooth
+        // Save to attendance
+        boolean hasAlreadyAttend = AttendanceRepository.hasAttend(getApplicationContext(), rawResult.getText());
+        if  (!hasAlreadyAttend) {
+            Attendance attendance = new Attendance(rawResult.getText(), rawResult.getText() + " Description", "10am", "12pm");
+            AttendanceRepository.create(this, attendance);
+            Toast.makeText(this, "Successfully sign an attendance for " + rawResult.getText() + ".", Toast.LENGTH_LONG).show();
+        } else {
+            Toast.makeText(this, "You already attend the " + rawResult.getText() + " activity.", Toast.LENGTH_LONG).show();
+        }
+        finish();
     }
 }
