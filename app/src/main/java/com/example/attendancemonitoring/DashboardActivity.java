@@ -180,10 +180,18 @@ public class DashboardActivity extends AppCompatActivity {
         Fragment fragment = null;
         Class fragmentClass = ActivityFragment.class;
         boolean isFragment = false;
+
         switch(menuItem.getItemId()) {
+            case R.id.nav_dashboard:
+                Intent intent1 = new Intent(this, DashboardActivity.class);
+                intent1.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent1);
+                break;
+
             case R.id.nav_attendance:
-                Intent intent = new Intent(this, AttendanceActivity.class);
-                startActivity(intent);
+                Intent intent2 = new Intent(this, AttendanceActivity.class);
+                intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                startActivity(intent2);
                 break;
             default:
                 fragmentClass = ActivityFragment.class;

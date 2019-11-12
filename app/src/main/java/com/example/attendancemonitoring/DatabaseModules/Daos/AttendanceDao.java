@@ -17,6 +17,6 @@ public interface AttendanceDao {
     @Query("SELECT * FROM attendances")
     List<Attendance> getAttendance();
 
-    @Query("SELECT * FROM attendances WHERE name LIKE '%' || :name || '%'")
+    @Query("SELECT * FROM attendances WHERE name = :name")
     Attendance find(String name);
 }

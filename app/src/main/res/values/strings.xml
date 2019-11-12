@@ -8,7 +8,7 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="attended_activities">Attended Activities</string>
-    <string name="attendance">Attendance</string>
+    <string name="scan_qr_code">Scan QR Code</string>
     <string name="splash_screen_text">CECST Activity Attendance</string>
     <string name="register_message">For you to start using this application you must field those fields</string>
     <string name="settings">Settings</string>
@@ -32,4 +32,5 @@
     <string name="attachment_summary_on">Automatically download attachments for incoming emails
     </string>
     <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="dashboard">Dashboard</string>
 </resources>

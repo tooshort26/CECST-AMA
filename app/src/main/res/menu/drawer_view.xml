@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
+
     <group android:checkableBehavior="single"
         android:id="@+id/menu_top">
         <item
+            android:id="@+id/nav_dashboard"
+            android:icon="@drawable/ic_dashboard_black_24dp"
+            android:title="@string/dashboard" />
+
+
+    </group>
+
+    <group android:checkableBehavior="single"
+        android:id="@+id/menu_between">
+        <item
             android:id="@+id/nav_attendance"
             android:icon="@drawable/ic_camera_black_24dp"
-            android:title="@string/attendance" />
+            android:title="@string/scan_qr_code" />
 
         <item
             android:id="@+id/nav_first_fragment"
