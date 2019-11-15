@@ -83,6 +83,9 @@ public class AttendanceActivity extends AppCompatActivity implements ZXingScanne
         } else {
             Toast.makeText(this, "You already attend the " + rawResult.getText() + " activity.", Toast.LENGTH_LONG).show();
         }
-        finish();
+
+        Intent i = new Intent(getApplicationContext(),DashboardActivity.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(i);
     }
 }

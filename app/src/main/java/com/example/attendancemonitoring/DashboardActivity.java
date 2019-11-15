@@ -3,10 +3,10 @@ package com.example.attendancemonitoring;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -17,19 +17,12 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.example.attendancemonitoring.DatabaseModules.DB;
+import com.example.attendancemonitoring.DatabaseModules.Models.Event;
 import com.example.attendancemonitoring.DatabaseModules.Models.User;
 import com.example.attendancemonitoring.Helpers.Strings;
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
 import com.google.android.material.navigation.NavigationView;
 
-import org.json.JSONObject;
-
-import java.net.URISyntaxException;
-
-import me.aflak.bluetooth.Bluetooth;
-import me.aflak.bluetooth.interfaces.BluetoothCallback;
+import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -37,28 +30,7 @@ public class DashboardActivity extends AppCompatActivity {
     private Toolbar toolbar;
     private NavigationView nvDrawer;
 
-
-    private Bluetooth bluetooth;
-
     private ActionBarDrawerToggle drawerToggle;
-
-
-    private Socket mSocket;
-    {
-        try {
-            mSocket = IO.socket("http://192.168.1.4:3030");
-        } catch (URISyntaxException e) {
-            Toast.makeText(this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private Emitter.Listener onNewMessage = args -> runOnUiThread(() -> {
-        JSONObject data = (JSONObject) args[0];
-        Toast.makeText(DashboardActivity.this, String.valueOf(data), Toast.LENGTH_LONG).show();
-    });
-
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,14 +65,6 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Tie DrawerLayout events to the ActionBarToggle
         mDrawer.addDrawerListener(drawerToggle);
-
-        mSocket.connect();
-//        mSocket.on("sample", onNewMessage);
-
-
-        bluetooth = new Bluetooth(this);
-        bluetooth.setBluetoothCallback(bluetoothCallback);
-
     }
 
 
@@ -116,32 +80,8 @@ public class DashboardActivity extends AppCompatActivity {
 //        super.onBackPressed();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        bluetooth.onStart();
-        if(!bluetooth.isEnabled()){
-            bluetooth.enable();
-        }
-    }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        bluetooth.onStop();
-    }
 
-    private BluetoothCallback bluetoothCallback = new BluetoothCallback() {
-        @Override public void onBluetoothTurningOn() {}
-        @Override public void onBluetoothTurningOff() {}
-        @Override public void onBluetoothOff() {}
-        @Override public void onUserDeniedActivation() {}
-
-        @Override
-        public void onBluetoothOn() {
-            // doStuffWhenBluetoothOn() ...
-        }
-    };
 
     // `onPostCreate` called when activity start-up is complete after `onStart()`
     // NOTE 1: Make sure to override the method with only a single `Bundle` argument

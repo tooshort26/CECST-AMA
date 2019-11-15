@@ -37,10 +37,11 @@ public class RegisterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_register);
         ButterKnife.bind(this);
         this.initializeRegister();
+
         // Initialize Form Validator
         mAwesomeValidation = new AwesomeValidation(COLORATION);
         mAwesomeValidation.setColor(Color.YELLOW);  // optional, default color is RED if not set
-        mAwesomeValidation.addValidation(this, R.id.idNumber, "\\d+", R.string.idNumber);
+        mAwesomeValidation.addValidation(this, R.id.idNumber, "\\d+\\-\\d+", R.string.idNumber);
         mAwesomeValidation.addValidation(this, R.id.firstName, "[a-zA-Z\\s]+", R.string.firstName);
         mAwesomeValidation.addValidation(this, R.id.middleName, "[a-zA-Z\\s]+", R.string.middleName);
         mAwesomeValidation.addValidation(this, R.id.lastName, "[a-zA-Z\\s]+", R.string.lastName);
@@ -49,9 +50,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void initializeRegister() {
         if  (UserRepository.isUserAlreadyRegister(this)) {
-            Intent i = new Intent(getApplicationContext(), MainActivity.class);
+            Intent i = new Intent(getApplicationContext(), DashboardActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(i);
-            finish();
         } else {
             // The user need to register so we need to init the value of course spinner.
             this.setCourses();
@@ -81,9 +82,10 @@ public class RegisterActivity extends AppCompatActivity {
                 // Insert new user.
                 DB.getInstance(getApplicationContext()).userDao().create(user);
 
-                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+//                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                Intent i = new Intent(getApplicationContext(),DashboardActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);
-                finish();
         }
 
     }

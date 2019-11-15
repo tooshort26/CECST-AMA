@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -7,99 +7,107 @@
     android:background="#FFFFFF"
     tools:context=".RegisterActivity">
 
-    <LinearLayout
-        android:id="@+id/message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginTop="60dp">
 
-        <ImageView
-                android:layout_gravity="center"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/cecst_logo"/>
+      <RelativeLayout
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          >
 
-        <TextView
-            android:layout_marginTop="10dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textColor="@color/textSecondaryColor"
-            android:textStyle="bold"
-            android:textSize="16sp"
-            android:padding="15dp"
-            android:text="@string/register_message"/>
+          <LinearLayout
+              android:id="@+id/message"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:orientation="vertical"
+              android:layout_marginTop="70dp"
+              >
 
+              <ImageView
+                  android:layout_gravity="center"
+                  android:layout_width="wrap_content"
+                  android:layout_height="wrap_content"
+                  android:src="@drawable/cecst_logo"/>
 
-    </LinearLayout>
-    
-    <LinearLayout
-        android:layout_below="@id/message"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:padding="20dp"
-        android:orientation="vertical">
-        
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="ID Number"
-            android:layout_marginBottom="15dp"
-            android:padding="10dp"
-            android:inputType="numberSigned"
-            android:singleLine="true"
-            android:id="@+id/idNumber"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Firstname"
-            android:singleLine="true"
-            android:layout_marginBottom="15dp"
-            android:padding="10dp"
-            android:id="@+id/firstName"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Middlename"
-            android:singleLine="true"
-            android:layout_marginBottom="15dp"
-            android:padding="10dp"
-            android:id="@+id/middleName"/>
-
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:hint="Lastname"
-            android:singleLine="true"
-            android:layout_marginBottom="15dp"
-            android:padding="10dp"
-            android:id="@+id/lastName"/>
-        
-        <Spinner
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:padding="20dp"
-            android:id="@+id/course"
-            />
+              <TextView
+                  android:layout_marginTop="10dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:textAlignment="center"
+                  android:textColor="@color/textSecondaryColor"
+                  android:textStyle="bold"
+                  android:textSize="16sp"
+                  android:padding="15dp"
+                  android:text="@string/register_message"/>
 
 
+          </LinearLayout>
 
-            <Button
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:id="@+id/btnRegister"
-                android:layout_gravity="center"
-                android:background="@color/colorPrimary"
-                android:textColor="#FFFFFF"
-                android:text="Proceed"/>
+          <LinearLayout
+              android:layout_below="@id/message"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_marginTop="20dp"
+              android:padding="20dp"
+              android:orientation="vertical">
+
+              <EditText
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:hint="ID Number"
+                  android:layout_marginBottom="15dp"
+                  android:padding="10dp"
+                  android:singleLine="true"
+                  android:id="@+id/idNumber"/>
+
+              <EditText
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:hint="Firstname"
+                  android:singleLine="true"
+                  android:layout_marginBottom="15dp"
+                  android:padding="10dp"
+                  android:id="@+id/firstName"/>
+
+              <EditText
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:hint="Middlename"
+                  android:singleLine="true"
+                  android:layout_marginBottom="15dp"
+                  android:padding="10dp"
+                  android:id="@+id/middleName"/>
+
+              <EditText
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:hint="Lastname"
+                  android:singleLine="true"
+                  android:layout_marginBottom="15dp"
+                  android:padding="10dp"
+                  android:id="@+id/lastName"/>
+
+              <Spinner
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:layout_marginBottom="10dp"
+                  android:padding="20dp"
+                  android:id="@+id/course"
+                  />
 
 
-    </LinearLayout>
-    
 
-</RelativeLayout>
+              <Button
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:id="@+id/btnRegister"
+                  android:layout_gravity="center"
+                  android:background="@color/colorPrimary"
+                  android:textColor="#FFFFFF"
+                  android:text="Proceed"/>
+
+          </LinearLayout>
+
+      </RelativeLayout>
+
+
+
+</ScrollView>
