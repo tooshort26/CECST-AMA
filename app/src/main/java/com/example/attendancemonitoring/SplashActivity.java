@@ -11,7 +11,6 @@ import android.view.WindowManager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.attendancemonitoring.Helpers.SharedPref;
-import com.example.attendancemonitoring.Repositories.EventRepository;
 
 import java.lang.ref.WeakReference;
 
@@ -26,7 +25,7 @@ public class SplashActivity extends AppCompatActivity {
         this.setActivityToFullScreen();
 
         if  ( !SharedPref.getSharedPreferenceBoolean(this,"is_splash_open",false) ) {
-            mWaitHandler.postDelayed(() -> {
+                mWaitHandler.postDelayed(() -> {
                 //The following code will execute after the 5 seconds.
                 try {
                     new runOnBackground(SplashActivity.this).execute();
@@ -65,16 +64,18 @@ public class SplashActivity extends AppCompatActivity {
             @Override
             protected void onPreExecute() {
                 // What do you want to execute while the splash screen display.
-                SharedPref.setSharedPreferenceBoolean(getApplicationContext(),"is_splash_open",true);
-                EventRepository.create(getApplicationContext(), "Event 1", "January 6");
-                EventRepository.create(getApplicationContext(), "Event 2", "January 7");
-                EventRepository.create(getApplicationContext(), "Event 3", "January 8");
-                EventRepository.create(getApplicationContext(), "Event 4", "January 9");
-                EventRepository.create(getApplicationContext(), "Event 5", "January 10");
+
+
             }
 
             @Override
             protected Void doInBackground(Void... voids) {
+                //SharedPref.setSharedPreferenceBoolean(getApplicationContext(),"is_splash_open",true);
+//                EventRepository.create(getApplicationContext(), "Event 1", "January 6");
+//                EventRepository.create(getApplicationContext(), "Event 2", "January 7");
+//                EventRepository.create(getApplicationContext(), "Event 3", "January 8");
+//                EventRepository.create(getApplicationContext(), "Event 4", "January 9");
+//                EventRepository.create(getApplicationContext(), "Event 5", "January 10");
                 return null;
             }
 

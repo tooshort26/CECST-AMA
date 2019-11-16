@@ -9,4 +9,8 @@
         <item name="android:actionMenuTextColor">#212121</item>
     </style>
 
+    <style name="NavigationView" >
+        <item name="fontFamily">@font/product_sans</item>
+    </style>
+
 </resources>

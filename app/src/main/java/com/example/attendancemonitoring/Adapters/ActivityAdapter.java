@@ -8,6 +8,7 @@ import android.widget.TextView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.attendancemonitoring.DatabaseModules.Models.Attendance;
+import com.example.attendancemonitoring.Helpers.Strings;
 import com.example.attendancemonitoring.R;
 
 import java.util.List;
@@ -30,7 +31,7 @@ public class ActivityAdapter extends RecyclerView.Adapter<ActivityAdapter.Attend
     @Override
     public void onBindViewHolder(AttendanceHolder holder, int position) {
         Attendance attendance = list_attendance.get(position);
-        holder.name.setText(String.format("%s\n%s (%s - %s)", attendance.getName(), attendance.getDescription(), attendance.getStart(), attendance.getEnd()));
+        holder.name.setText(String.format("%s\n\n%s (%s - %s)", Strings.capitalize(attendance.getName()), Strings.capitalize(attendance.getDescription()), attendance.getStart(), attendance.getEnd()));
     }
 
     @Override

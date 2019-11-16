@@ -32,10 +32,11 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:textAlignment="center"
-                  android:textColor="@color/textSecondaryColor"
+                  android:textColor="#000000"
                   android:textStyle="bold"
                   android:textSize="16sp"
                   android:padding="15dp"
+                  android:fontFamily="@font/product_sans"
                   android:text="@string/register_message"/>
 
 
@@ -52,6 +53,7 @@
               <EditText
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
+                  android:fontFamily="@font/product_sans"
                   android:hint="ID Number"
                   android:layout_marginBottom="15dp"
                   android:padding="10dp"
@@ -61,6 +63,7 @@
               <EditText
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
+                  android:fontFamily="@font/product_sans"
                   android:hint="Firstname"
                   android:singleLine="true"
                   android:layout_marginBottom="15dp"
@@ -70,6 +73,7 @@
               <EditText
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
+                  android:fontFamily="@font/product_sans"
                   android:hint="Middlename"
                   android:singleLine="true"
                   android:layout_marginBottom="15dp"
@@ -79,6 +83,7 @@
               <EditText
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
+                  android:fontFamily="@font/product_sans"
                   android:hint="Lastname"
                   android:singleLine="true"
                   android:layout_marginBottom="15dp"
@@ -91,6 +96,8 @@
                   android:layout_marginBottom="10dp"
                   android:padding="20dp"
                   android:id="@+id/course"
+                  android:fontFamily="@font/product_sans"
+                  android:textColor="@color/textSecondaryColor"
                   />
 
 
@@ -102,6 +109,7 @@
                   android:layout_gravity="center"
                   android:background="@color/colorPrimary"
                   android:textColor="#FFFFFF"
+                  android:fontFamily="@font/product_sans"
                   android:text="Proceed"/>
 
           </LinearLayout>
