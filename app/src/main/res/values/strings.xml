@@ -1,15 +1,15 @@
 <resources>
-    <string name="app_name">CECST Attendance Monitoring</string>
+    <string name="app_name">Course Attendance System</string>
     <string name="login_using_facial_recognition">Login using facial Recognition</string>
     <string name="login_using_finger_print">Login using Finger Print</string>
 
     <string name="drawer_open">Open navigation drawer</string>
     <string name="drawer_close">Close navigation drawer</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+
     <string name="attended_activities">Attended Activities</string>
     <string name="scan_qr_code">Scan QR Code</string>
-    <string name="splash_screen_text">CECST Activity Attendance</string>
+    <string name="splash_screen_text">Course Attendance System</string>
     <string name="register_message">For you to start using this application you must field those fields</string>
     <string name="settings">Settings</string>
     <string name="idNumber">Please check your id number</string>
@@ -35,11 +35,7 @@
     <string name="dashboard">Dashboard</string>
 
 
-
-
-
-
-<!--    FROM THE CHATYY -->
+    <!--    FROM THE CHATYY -->
     <!-- App and Activities -->
     <string name="title_activity_view_image">View image</string>
     <string name="title_activity_chat">Chatroom</string>
@@ -91,4 +87,13 @@
     <string name="brush">Brush</string>
     <string name="eraser">Eraser</string>
     <string name="save_and_send">Save and Send</string>
+    <string name="create_activity">Create Activity</string>
+    <string name="activities">Activities</string>
+    <string name="export_attendance">Export Attendance</string>
+    <string name="server_help_message">Please invite one client via WiFi-Direct to establish a Server-Client connection.</string>
+    <string name="client_help_message">If the server invite you as a client all you need to do is accept otherwise wait for server action.</string>
+
+    <string name="process_server">PROCESS SERVER</string>
+    <string name="export_csv">EXPORT CSV</string>
+
 </resources>

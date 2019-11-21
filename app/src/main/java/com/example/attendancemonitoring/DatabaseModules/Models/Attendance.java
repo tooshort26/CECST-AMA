@@ -4,21 +4,20 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 
-@Entity(tableName="attendances")
+@Entity(tableName="activity_attendance")
 public class Attendance {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    private String name;
-    private String description;
-    private String start;
-    private String end;
+    public int activity_id;
+    public String student_name;
+    public String student_id;
+    public String device_id;
 
-
-    public Attendance(String name, String description, String start, String end) {
-        this.setName(name);
-        this.setDescription(description);
-        this.setStart(start);
-        this.setEnd(end);
+    public Attendance(int activity_id, String student_name, String student_id, String device_id) {
+        this.activity_id = activity_id;
+        this.student_name = student_name;
+        this.student_id = student_id;
+        this.device_id = device_id;
     }
 
     public int getId() {
@@ -29,35 +28,35 @@ public class Attendance {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getStudent_name() {
+        return student_name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStudent_name(String student_name) {
+        this.student_name = student_name;
     }
 
-    public String getDescription() {
-        return description;
+    public int getActivity_id() {
+        return activity_id;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setActivity_id(int activity_id) {
+        this.activity_id = activity_id;
     }
 
-    public String getStart() {
-        return start;
+    public String getStudent_id() {
+        return student_id;
     }
 
-    public void setStart(String start) {
-        this.start = start;
+    public void setStudent_id(String student_id) {
+        this.student_id = student_id;
     }
 
-    public String getEnd() {
-        return end;
+    public String getDevice_id() {
+        return device_id;
     }
 
-    public void setEnd(String end) {
-        this.end = end;
+    public void setDevice_id(String device_id) {
+        this.device_id = device_id;
     }
 }

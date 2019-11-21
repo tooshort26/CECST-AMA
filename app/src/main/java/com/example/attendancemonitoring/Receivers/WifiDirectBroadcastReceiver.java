@@ -6,13 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
 import android.net.wifi.p2p.WifiP2pDevice;
-import android.net.wifi.p2p.WifiP2pInfo;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.util.Log;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.attendancemonitoring.AttendanceActivity;
+import com.example.attendancemonitoring.Repositories.UserRepository;
 
 import java.net.InetAddress;
 import java.util.ArrayList;
@@ -101,16 +102,27 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
 			}
 			NetworkInfo networkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
 			if(networkInfo.isConnected()){
-				mManager.requestConnectionInfo(mChannel, new WifiP2pManager.ConnectionInfoListener() {
+				mManager.requestConnectionInfo(mChannel, info -> {
+					ownerAddr= info.groupOwnerAddress;
 
-					@Override
-					public void onConnectionInfoAvailable(WifiP2pInfo info) {
-						ownerAddr= info.groupOwnerAddress;
 
+					if(UserRepository.getUserRole(mActivity).equals("employee")) {
 						/******************************************************************
 						 The client : create a client thread that connects to the group owner
 						 ******************************************************************/
-						 if (info.groupFormed) {
+						/******************************************************************
+						 The GO : create a server thread and accept incoming connections
+						 ******************************************************************/
+
+						if (info.groupFormed && info.isGroupOwner) {
+							isGroupeOwner = IS_OWNER;
+							activateGotoAttendance("server");
+						}
+					} else {
+						/******************************************************************
+						 The client : create a client thread that connects to the group owner
+						 ******************************************************************/
+					    if (info.groupFormed) {
 							isGroupeOwner = IS_CLIENT;
 							activateGotoAttendance("client");
 						}
@@ -122,9 +134,16 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
 
 	public void activateGotoAttendance(String role){
 		if(mActivity.getClass() == AttendanceActivity.class) {
-			((AttendanceActivity)mActivity).getGoToAttendance().setText(String.format("Start the chat %s", role));
+
+			((AttendanceActivity)mActivity).getWifiMessageLayout().setVisibility(View.GONE);
+			((AttendanceActivity)mActivity).getSetActivityName().setVisibility(View.VISIBLE);
+			((AttendanceActivity)mActivity).getBtnGoToAttendance().setVisibility(View.VISIBLE);
+
+			((AttendanceActivity)mActivity).getBtnGoToAttendance().setText(String.format("Start %s", role));
+
 		}
 	}
+
 
 
 }

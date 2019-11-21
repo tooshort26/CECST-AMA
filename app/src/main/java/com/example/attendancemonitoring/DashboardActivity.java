@@ -3,7 +3,6 @@ package com.example.attendancemonitoring;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -16,13 +15,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.example.attendancemonitoring.Accounts.Employee.CreateActivityFragment;
+import com.example.attendancemonitoring.Accounts.Employee.ListActivityFragment;
+import com.example.attendancemonitoring.Accounts.Student.AttendedActivityFragment;
 import com.example.attendancemonitoring.DatabaseModules.DB;
-import com.example.attendancemonitoring.DatabaseModules.Models.Event;
 import com.example.attendancemonitoring.DatabaseModules.Models.User;
 import com.example.attendancemonitoring.Helpers.Strings;
+import com.example.attendancemonitoring.Repositories.UserRepository;
 import com.google.android.material.navigation.NavigationView;
-
-import java.util.List;
 
 public class DashboardActivity extends AppCompatActivity {
 
@@ -37,20 +37,22 @@ public class DashboardActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_dashboard);
 
+
         // Set a Toolbar to replace the ActionBar.
         toolbar = findViewById(R.id.toolbar);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 
         nvDrawer = findViewById(R.id.nvView);
+
+        this.setUpNavigationMenuByUser(nvDrawer);
+
         // Set the header name of navigation to the current user.
         NavigationView navigationView = findViewById(R.id.nvView);
         View hView =  navigationView.getHeaderView(0);
-        TextView navUsername = hView.findViewById(R.id.userName);
-        User user = DB.getInstance(getApplicationContext()).userDao().getUser();
-        String userName = Strings.capitalize(user.getFirstname()) + " " + Strings.capitalize(user.getMiddlename())  + " " + Strings.capitalize(user.getLastname());
-        navUsername.setText(userName);
+        this.displayUserNameInNavigation(hView);
 
         // Setup drawer view
         setupDrawerContent(nvDrawer);
@@ -65,6 +67,23 @@ public class DashboardActivity extends AppCompatActivity {
 
         // Tie DrawerLayout events to the ActionBarToggle
         mDrawer.addDrawerListener(drawerToggle);
+
+    }
+
+    private void displayUserNameInNavigation(View hView) {
+        TextView navUsername = hView.findViewById(R.id.userName);
+        User user = DB.getInstance(getApplicationContext()).userDao().getUser();
+        String userName = Strings.capitalize(user.getFirstname()) + " " + Strings.capitalize(user.getMiddlename())  + " " + Strings.capitalize(user.getLastname());
+        navUsername.setText(userName);
+    }
+
+    private void setUpNavigationMenuByUser(NavigationView nvDrawer) {
+        nvDrawer.getMenu().clear();
+        if  (UserRepository.getUserRole(this).equals("employee")) {
+            nvDrawer.inflateMenu(R.menu.employee_drawer_view);
+        } else {
+            nvDrawer.inflateMenu(R.menu.student_drawer_view);
+        }
     }
 
 
@@ -77,7 +96,6 @@ public class DashboardActivity extends AppCompatActivity {
                 .setNegativeButton("No", (dialog, id) -> dialog.cancel());
         AlertDialog alert = builder.create();
         alert.show();
-//        super.onBackPressed();
     }
 
 
@@ -118,7 +136,7 @@ public class DashboardActivity extends AppCompatActivity {
     public void selectDrawerItem(MenuItem menuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
-        Class fragmentClass = ActivityFragment.class;
+        Class fragmentClass = AttendedActivityFragment.class;
         boolean isFragment = false;
 
         switch(menuItem.getItemId()) {
@@ -133,8 +151,21 @@ public class DashboardActivity extends AppCompatActivity {
                 intent2.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent2);
                 break;
+
+            case R.id.nav_create_activity:
+                fragmentClass = CreateActivityFragment.class;
+                isFragment = true;
+                break;
+
+
+            case R.id.nav_activities:
+                fragmentClass = ListActivityFragment.class;
+                isFragment = true;
+                break;
+
+
             default:
-                fragmentClass = ActivityFragment.class;
+                fragmentClass = AttendedActivityFragment.class;
                 isFragment = true;
         }
 
@@ -160,7 +191,6 @@ public class DashboardActivity extends AppCompatActivity {
         mDrawer.closeDrawers();
     }
 
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (drawerToggle.onOptionsItemSelected(item)) {
@@ -168,6 +198,8 @@ public class DashboardActivity extends AppCompatActivity {
         }
         return super.onOptionsItemSelected(item);
     }
+
+
 
 
 

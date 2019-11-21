@@ -4,143 +4,193 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.preference.PreferenceManager;
+
+import com.example.attendancemonitoring.Helpers.Strings;
 import com.example.attendancemonitoring.InitThreads.ClientInit;
+import com.example.attendancemonitoring.InitThreads.ServerInit;
 import com.example.attendancemonitoring.Receivers.WifiDirectBroadcastReceiver;
+import com.example.attendancemonitoring.Repositories.UserRepository;
 
-public class AttendanceActivity extends Activity {
+public  class AttendanceActivity extends Activity {
 
-    public static final String TAG = "AttendanceActivity";
-    public static final String DEFAULT_CHAT_NAME = "DEFAULT_CHATNAME";
-    private WifiP2pManager mManager;
-    private WifiP2pManager.Channel mChannel;
-    private WifiDirectBroadcastReceiver mReceiver;
-    private IntentFilter mIntentFilter;
-    private Button goToAttendance;
-    private ImageView goToSettings;
-    private TextView goToSettingsText;
-    private TextView setChatNameLabel;
-    private EditText setChatName;
-    private ImageView disconnect;
-    public static String chatName;
-//    public static ServerInit server;
+        public static final String TAG = "MainActivity";
+        public static final String DEFAULT_CHAT_NAME = "";
+        private WifiP2pManager mManager;
+        private WifiP2pManager.Channel mChannel;
+        private WifiDirectBroadcastReceiver mReceiver;
+        private IntentFilter mIntentFilter;
 
-    //Getters and Setters
-    public WifiP2pManager getmManager() { return mManager; }
-    public WifiP2pManager.Channel getmChannel() { return mChannel; }
-    public WifiDirectBroadcastReceiver getmReceiver() { return mReceiver; }
-    public IntentFilter getmIntentFilter() { return mIntentFilter; }
-    public Button getGoToAttendance(){ return goToAttendance; }
-    public TextView getSetChatNameLabel() { return setChatNameLabel; }
-    public ImageView getGoToSettings() { return goToSettings; }
-    public EditText getSetChatName() { return setChatName; }
-    public TextView getGoToSettingsText() { return goToSettingsText; }
-    public ImageView getDisconnect() { return disconnect; }
+        private Button btnGoToAttendance;
+
+        private TextView setActivityName;
+        private TextView helpMessage;
+
+        private LinearLayout wifiMessageLayout;
+
+        public static String useFullName;
+        public static ServerInit server;
+
+        //Getters and Setters
+        public Button getBtnGoToAttendance(){ return btnGoToAttendance; }
+        public LinearLayout getWifiMessageLayout() { return wifiMessageLayout; }
+        public TextView getSetActivityName() { return setActivityName; }
+        public TextView getHelpMessage() { return helpMessage; }
 
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_attendance);
 
-        //Init the Channel, Intent filter and Broadcast receiver
-        init();
-        goToAttendance = findViewById(R.id.gotoAttendance);
-        goToAttendance();
-    }
+        @Override
+        protected void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setContentView(R.layout.activity_attendance);
 
-    @Override
-    protected void onPostCreate(Bundle savedInstanceState) {
-        super.onPostCreate(savedInstanceState);
+            //Init the Channel, Intent filter and Broadcast receiver
+            init();
+
+            wifiMessageLayout = findViewById(R.id.wifiMessageLayout);
+
+            wifiMessageLayout.setOnClickListener(view -> startActivityForResult(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS), 0));
 
 
-    }
+            btnGoToAttendance = findViewById(R.id.goToAttendance);
+            setActivityName = findViewById(R.id.setActivityName);
+            helpMessage = findViewById(R.id.helpMessage);
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        registerReceiver(mReceiver, mIntentFilter);
+            Intent intent = getIntent();
 
-        mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+            this.initHelpMessageForUser();
+            this.gotoAttendance();
 
-            @Override
-            public void onSuccess() {
-                Log.v(TAG, "Discovery process succeeded");
+
+            if(UserRepository.getUserRole(this).equals("employee")) {
+                this.saveUserFullName(this, intent.getStringExtra("ACTIVITY_NAME"));
+                setActivityName.setText(String.format("Activity Name : %s", Strings.capitalize(loadUserFullName(this))));
+            } else {
+                this.saveUserFullName(this, UserRepository.getUserFullname(this));
+                setActivityName.setText(Strings.capitalize(loadUserFullName(this)));
             }
 
-            @Override
-            public void onFailure(int reason) {
-                Log.v(TAG, "Discovery process failed");
-            }
-        });
+
+        }
+
+    private void initHelpMessageForUser() {
+        if(UserRepository.getUserRole(this).equals("employee")) {
+            helpMessage.setText(R.string.server_help_message);
+        } else {
+            helpMessage.setText(R.string.client_help_message);
+        }
     }
+
 
     @Override
-    public void onPause() {
-        super.onPause();
-        unregisterReceiver(mReceiver);
-    }
+        protected void onPostCreate(Bundle savedInstanceState) {
+            super.onPostCreate(savedInstanceState);
+        }
+
+        @Override
+        public void onResume() {
+            super.onResume();
+            registerReceiver(mReceiver, mIntentFilter);
+
+            mManager.discoverPeers(mChannel, new WifiP2pManager.ActionListener() {
+
+                @Override
+                public void onSuccess() {
+                    Log.v(TAG, "Discovery process succeeded");
+                }
+
+                @Override
+                public void onFailure(int reason) {
+                    Log.v(TAG, "Discovery process failed");
+                }
+            });
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            unregisterReceiver(mReceiver);
+        }
 
 
+        public void init(){
+            mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
+            mChannel = mManager.initialize(this, getMainLooper(), null);
+            mReceiver = WifiDirectBroadcastReceiver.createInstance();
+            mReceiver.setmManager(mManager);
+            mReceiver.setmChannel(mChannel);
+            mReceiver.setmActivity(this);
 
-    public void init(){
-        mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
-        mChannel = mManager.initialize(this, getMainLooper(), null);
-        mReceiver = WifiDirectBroadcastReceiver.createInstance();
-        mReceiver.setmManager(mManager);
-        mReceiver.setmChannel(mChannel);
-        mReceiver.setmActivity(this);
+            mIntentFilter = new IntentFilter();
+            mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
+            mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
+            mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
+            mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
+        }
 
-        mIntentFilter = new IntentFilter();
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_STATE_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_PEERS_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION);
-        mIntentFilter.addAction(WifiP2pManager.WIFI_P2P_THIS_DEVICE_CHANGED_ACTION);
-    }
+        public void gotoAttendance() {
+            btnGoToAttendance.setOnClickListener(arg0 -> {
 
-    public void goToAttendance(){
-        goToAttendance.setOnClickListener(arg0 -> {
+                    saveUserFullName(AttendanceActivity.this, setActivityName.getText().toString());
+                    useFullName = loadUserFullName(AttendanceActivity.this);
 
-               if(mReceiver.isGroupeOwner() ==  WifiDirectBroadcastReceiver.IS_CLIENT){
-                    Toast.makeText(AttendanceActivity.this, "I'm the client", Toast.LENGTH_SHORT).show();
-                    ClientInit client = new ClientInit(mReceiver.getOwnerAddr());
-                    client.start();
-                   Intent intent = new Intent(getApplicationContext(), ScanQRActivity.class);
-                   startActivity(intent);
-                } else {
-                   Toast.makeText(AttendanceActivity.this, "You are not a client!", Toast.LENGTH_SHORT).show();
-               }
+                    //Start the init process
+                    if(mReceiver.isGroupeOwner() ==  WifiDirectBroadcastReceiver.IS_OWNER){
+                        Toast.makeText(AttendanceActivity.this, "I'm the group owner  " + mReceiver.getOwnerAddr().getHostAddress(), Toast.LENGTH_SHORT).show();
+                        server = new ServerInit();
+                        server.start();
+                    }
 
-        });
-    }
+                    else if(mReceiver.isGroupeOwner() ==  WifiDirectBroadcastReceiver.IS_CLIENT){
+                        Toast.makeText(AttendanceActivity.this, "I'm the client", Toast.LENGTH_SHORT).show();
+                        ClientInit client = new ClientInit(mReceiver.getOwnerAddr());
+                        client.start();
+                    }
 
-  /*  public void disconnect(){
-        disconnect.setOnClickListener(new View.OnClickListener() {
+                    //Open the ChatActivity
+                    Intent intent = new Intent(getApplicationContext(), ScanQRActivity.class);
+                    if(UserRepository.getUserRole(this).equals("employee")) {
+                        Intent i = getIntent();
+                        String activity_name = i.getStringExtra("ACTIVITY_NAME");
+                        String activity_id = i.getStringExtra("ACTIVITY_ID");
+                        intent.putExtra("ACTIVITY_NAME", activity_name);
+                        intent.putExtra("ACTIVITY_ID", activity_id);
+                    }
+                    startActivity(intent);
 
-            @Override
-            public void onClick(View v) {
+            });
+        }
+
+       /* public void disconnect(){
+            disconnect.setOnClickListener(v -> {
                 mManager.removeGroup(mChannel, null);
                 finish();
-            }
-        });
-    }*/
+            });
+        }
 
-  /*  public void goToSettings(){
-        goToSettings.setOnClickListener(arg0 -> {
+   */
 
-            //Open Wifi settings
-            startActivityForResult(new Intent(android.provider.Settings.ACTION_WIFI_SETTINGS), 0);
-        });
-    }*/
+        //Save the chat name to SharedPreferences
+        public void saveUserFullName(Context context, String chatName) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            SharedPreferences.Editor edit = prefs.edit();
+            edit.putString("useFullName", chatName);
+            edit.commit();
+        }
 
+        //Retrieve the chat name from SharedPreferences
+        public static String loadUserFullName(Context context) {
+            SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(context);
+            return prefs.getString("useFullName", DEFAULT_CHAT_NAME);
+        }
 
-
-}
+    }

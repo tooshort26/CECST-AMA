@@ -6,31 +6,76 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
+
+    <TextView
+        android:layout_above="@id/useChooseLayout"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:fontFamily="@font/product_sans"
+        android:textSize="20sp"
+        android:textAlignment="center"
+        android:layout_marginBottom="50dp"
+        android:text="What kind of user are you?" />
+
+    <LinearLayout
+        android:id="@+id/useChooseLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        >
+        android:gravity="center"
+        android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btnLoginFacialRecognition"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:id="@+id/studentLayout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login_using_facial_recognition"/>
+            android:orientation="vertical"
+            android:layout_marginEnd="5dp"
+            android:padding="10dp">
 
-        <Button
-            android:id="@+id/btnLoginFingerPrint"
-            android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/student"/>
+
+            <Button
+                android:id="@+id/btnStudent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/product_sans"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:background="@color/colorPrimary"
+                android:textColor="#FFFFFF"
+                android:text="Student"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/employeeLayout"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/login_using_finger_print"/>
+            android:orientation="vertical"
+            android:layout_marginStart="5dp"
+            android:padding="10dp">
 
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/teacher" />
 
-        <Button
-            android:id="@+id/proceed"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Just proceed"/>
+            <Button
+                android:id="@+id/btnEmployee"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:fontFamily="@font/product_sans"
+                android:text="Employee"
+                android:textStyle="bold"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp" />
+
+        </LinearLayout>
 
 
     </LinearLayout>

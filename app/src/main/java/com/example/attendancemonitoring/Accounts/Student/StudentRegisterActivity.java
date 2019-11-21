@@ -1,4 +1,4 @@
-package com.example.attendancemonitoring;
+package com.example.attendancemonitoring.Accounts.Student;
 
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,9 +10,11 @@ import android.widget.Spinner;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.basgeekball.awesomevalidation.AwesomeValidation;
+import com.example.attendancemonitoring.DashboardActivity;
 import com.example.attendancemonitoring.DatabaseModules.DB;
 import com.example.attendancemonitoring.DatabaseModules.Models.User;
-import com.example.attendancemonitoring.Repositories.UserRepository;
+import com.example.attendancemonitoring.Helpers.SharedPref;
+import com.example.attendancemonitoring.R;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -20,7 +22,7 @@ import butterknife.OnClick;
 
 import static com.basgeekball.awesomevalidation.ValidationStyle.COLORATION;
 
-public class RegisterActivity extends AppCompatActivity {
+public class StudentRegisterActivity extends AppCompatActivity {
 
     @BindView(R.id.idNumber) EditText idNumber;
     @BindView(R.id.firstName) EditText firstName;
@@ -34,9 +36,9 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
+        setContentView(R.layout.activity_student_register);
         ButterKnife.bind(this);
-        this.initializeRegister();
+        this.setCourses();
 
         // Initialize Form Validator
         mAwesomeValidation = new AwesomeValidation(COLORATION);
@@ -46,17 +48,13 @@ public class RegisterActivity extends AppCompatActivity {
         mAwesomeValidation.addValidation(this, R.id.middleName, "[a-zA-Z\\s]+", R.string.middleName);
         mAwesomeValidation.addValidation(this, R.id.lastName, "[a-zA-Z\\s]+", R.string.lastName);
 
-    }
 
-    private void initializeRegister() {
-        if  (UserRepository.isUserAlreadyRegister(this)) {
-            Intent i = new Intent(getApplicationContext(), DashboardActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(i);
-        } else {
-            // The user need to register so we need to init the value of course spinner.
-            this.setCourses();
-        }
+        /* for development purpose */
+        idNumber.setText("15-10755");
+        firstName.setText("christopher");
+        middleName.setText("platino");
+        lastName.setText("vistal");
+
     }
 
     private void setCourses() {
@@ -70,7 +68,6 @@ public class RegisterActivity extends AppCompatActivity {
     @OnClick(R.id.btnRegister) void register()
     {
         if  (mAwesomeValidation.validate()) {
-                // Add validation here..
                 User user = new User(
                         idNumber.getText().toString(),
                         firstName.getText().toString(),
@@ -79,10 +76,11 @@ public class RegisterActivity extends AppCompatActivity {
                         course.getSelectedItem().toString()
                 );
 
-                // Insert new user.
-                DB.getInstance(getApplicationContext()).userDao().create(user);
 
-//                Intent i = new Intent(getApplicationContext(),MainActivity.class);
+                DB.getInstance(getApplicationContext()).userDao().create(user);
+                SharedPref.setSharedPreferenceString(this, "user_role", "student");
+                SharedPref.setSharedPreferenceString(this, "student_id_number", idNumber.getText().toString());
+
                 Intent i = new Intent(getApplicationContext(),DashboardActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(i);

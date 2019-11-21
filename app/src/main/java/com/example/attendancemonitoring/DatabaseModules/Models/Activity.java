@@ -3,21 +3,21 @@ package com.example.attendancemonitoring.DatabaseModules.Models;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(tableName="events")
-public class Event {
+@Entity(tableName="activities")
+public class Activity {
     @PrimaryKey(autoGenerate = true)
     public int id;
-    String name;
-    String date;
+    private String name;
+    private String description;
 
-    public Event(String name, String date)
-    {
-        this.setDate(name);
-        this.setName(date);
-    }
+
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -28,11 +28,11 @@ public class Event {
         this.name = name;
     }
 
-    public String getDate() {
-        return date;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDate(String date) {
-        this.date = date;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

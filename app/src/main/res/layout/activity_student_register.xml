@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    tools:context=".RegisterActivity">
+    tools:context=".Accounts.Student.StudentRegisterActivity">
 
 
       <RelativeLayout
@@ -25,14 +25,13 @@
                   android:layout_gravity="center"
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
-                  android:src="@drawable/cecst_logo"/>
+                  android:src="@drawable/student"/>
 
               <TextView
                   android:layout_marginTop="10dp"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:textAlignment="center"
-                  android:textColor="#000000"
                   android:textStyle="bold"
                   android:textSize="16sp"
                   android:padding="15dp"
@@ -54,7 +53,7 @@
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:fontFamily="@font/product_sans"
-                  android:hint="ID Number"
+                  android:hint="15-01755"
                   android:layout_marginBottom="15dp"
                   android:padding="10dp"
                   android:singleLine="true"

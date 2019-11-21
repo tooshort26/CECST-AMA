@@ -15,6 +15,7 @@ public class User {
     public String course;
 
 
+
     public User(String id_number, String firstname, String middlename, String lastname, String course) {
         this.setId_number(id_number);
         this.setFirstname(firstname);
