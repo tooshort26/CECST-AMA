@@ -95,5 +95,6 @@
 
     <string name="process_server">PROCESS SERVER</string>
     <string name="export_csv">EXPORT CSV</string>
+    <string name="search_activity">Search activity...</string>
 
 </resources>

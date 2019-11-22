@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -48,25 +49,35 @@ public class ListActivityFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         EditText searchField = view.findViewById(R.id.searchField);
+        LinearLayout noDataLayout = view.findViewById(R.id.noDataAvailable);
+        LinearLayout recyclerViewLayout = view.findViewById(R.id.recyclerViewLayout);
+        activityList = DB.getInstance(getContext()).activityDao().getActivity();
+        if(activityList.size() != 0) {
+            this.buildRecyclerView(view);
+            searchField.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-        this.buildRecyclerView(view);
+                }
 
-       searchField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
 
-            }
+                }
 
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                @Override
+                public void afterTextChanged(Editable s) {
+                    filter(s.toString());
+                }
+            });
+        } else {
+            noDataLayout.setVisibility(View.VISIBLE);
+            recyclerViewLayout.setVisibility(View.GONE);
+        }
 
-            }
 
-            @Override
-            public void afterTextChanged(Editable s) {
-                filter(s.toString());
-            }
-        });
+
+
 
     }
 
@@ -85,7 +96,7 @@ public class ListActivityFragment extends Fragment {
 
     private void buildRecyclerView(View view) {
 
-        activityList = DB.getInstance(getContext()).activityDao().getActivity();
+
         serverActivityAdapter = new ServerActivityAdapter(activityList, getContext());
         RecyclerView recyclerView = view.findViewById(R.id.list_activity_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());

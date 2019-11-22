@@ -9,20 +9,42 @@
 
 
 
-        <EditText
-            android:id="@+id/searchField"
-            android:fontFamily="@font/product_sans"
-            android:hint="Search activity..."
-            android:drawableLeft="@drawable/ic_search_black_24dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+      <LinearLayout
+          android:id="@+id/recyclerViewLayout"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:orientation="vertical">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_below="@+id/searchField"
-            android:id="@+id/list_activity_recycler_view"
+              <EditText
+                  android:id="@+id/searchField"
+                  android:fontFamily="@font/product_sans"
+                  android:hint="@string/search_activity"
+                  android:drawableStart="@drawable/ic_search_black_24dp"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"/>
+
+              <androidx.recyclerview.widget.RecyclerView
+                  android:id="@+id/list_activity_recycler_view"
+                  android:layout_width="match_parent"
+                  android:layout_height="match_parent"
+                  android:padding="12dp"/>
+      </LinearLayout>
+
+        <LinearLayout
+            android:visibility="gone"
+            android:id="@+id/noDataAvailable"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="12dp"/>
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:orientation="vertical">
+
+                <include
+                    layout="@layout/no_data_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+        </LinearLayout>
+
 
 
 </RelativeLayout>

@@ -1,10 +1,10 @@
 package com.example.attendancemonitoring.Accounts.Student;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -45,16 +45,23 @@ public  class AttendedActivityFragment extends Fragment {
         public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
             super.onViewCreated(view, savedInstanceState);
             String studentId = DB.getInstance(getContext()).userDao().getUser().getId_number();
+            recyclerView = view.findViewById(R.id.recycler_view);
+            LinearLayout noDataLayout = view.findViewById(R.id.noDataAvailable);
             activityList = DB.getInstance(getContext()).attendanceDao().getByStudent(studentId);
-            Log.d("STUDENT_ATTENDANCE_LIST",activityList.toString());
-            this.buildRecyclerView(view);
+
+            if(activityList.size() == 0) {
+                noDataLayout.setVisibility(View.VISIBLE);
+                recyclerView.setVisibility(View.GONE);
+            } else {
+                this.buildRecyclerView();
+            }
+
+
         }
 
-        private void buildRecyclerView(View view) {
+        private void buildRecyclerView() {
 
             attendanceAdapater = new ClientAttendanceAdapter(activityList);
-
-            recyclerView = view.findViewById(R.id.recycler_view);
 
             recyclerView.addItemDecoration(new DividerItemDecoration(getContext(),1));
 
