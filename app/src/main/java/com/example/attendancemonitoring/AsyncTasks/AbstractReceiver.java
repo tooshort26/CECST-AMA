@@ -52,8 +52,8 @@ public class AbstractReceiver extends AsyncTask<Void, Message, Void> {
 		
 		//Check if the app is in foreground or not. Display the notification only if the app is in background
 		SharedPreferences pref = PreferenceManager.getDefaultSharedPreferences(context);
-		if(!pref.getBoolean("isForeground", false)){
-			mNotificationManager.notify(0, mNotification);
-		}
+//		if(!pref.getBoolean("isForeground", false)){
+//			mNotificationManager.notify(0, mNotification);
+//		}
 	}
 }

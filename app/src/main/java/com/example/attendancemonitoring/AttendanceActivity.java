@@ -82,6 +82,17 @@ public  class AttendanceActivity extends Activity {
 
         }
 
+    @Override
+    public void onBackPressed() {
+        if(!UserRepository.getUserRole(this).equalsIgnoreCase("employee")) {
+            Intent i = new Intent(this, DashboardActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(i);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
     private void initHelpMessageForUser() {
         if(UserRepository.getUserRole(this).equals("employee")) {
             helpMessage.setText(R.string.server_help_message);
@@ -122,9 +133,11 @@ public  class AttendanceActivity extends Activity {
         }
 
 
+
         public void init(){
             mManager = (WifiP2pManager) getSystemService(Context.WIFI_P2P_SERVICE);
             mChannel = mManager.initialize(this, getMainLooper(), null);
+
             mReceiver = WifiDirectBroadcastReceiver.createInstance();
             mReceiver.setmManager(mManager);
             mReceiver.setmChannel(mChannel);

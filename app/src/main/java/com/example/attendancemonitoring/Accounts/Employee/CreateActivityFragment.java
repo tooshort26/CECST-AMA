@@ -60,5 +60,7 @@ public class CreateActivityFragment extends Fragment {
                 Toast.makeText(getContext(), "Please enter the activity name.", Toast.LENGTH_LONG).show();
             }
         });
+
+
     }
 }

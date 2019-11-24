@@ -54,6 +54,7 @@ public  class AttendedActivityFragment extends Fragment {
                 recyclerView.setVisibility(View.GONE);
             } else {
                 this.buildRecyclerView();
+                noDataLayout.setVisibility(View.GONE);
             }
 
 

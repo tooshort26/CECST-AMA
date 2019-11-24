@@ -44,10 +44,10 @@ public class EmployeeRegisterActivity extends AppCompatActivity {
         mAwesomeValidation.addValidation(this, R.id.lastName, "[a-zA-Z\\s]+", R.string.lastName);
 
         /* for development purpose */
-        idNumber.setText("15-10755");
-        firstName.setText("christopher");
-        middleName.setText("platino");
-        lastName.setText("vistal");
+        idNumber.setText("15-01755");
+        firstName.setText("this");
+        middleName.setText("is");
+        lastName.setText("server");
     }
 
 

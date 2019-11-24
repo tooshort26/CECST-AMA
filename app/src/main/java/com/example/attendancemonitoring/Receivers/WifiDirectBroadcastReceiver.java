@@ -5,16 +5,17 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.net.NetworkInfo;
+import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import com.example.attendancemonitoring.AttendanceActivity;
 import com.example.attendancemonitoring.Repositories.UserRepository;
 
+import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,8 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
 	private WifiP2pManager mManager;
 	private Channel mChannel;
 	private Activity mActivity;
-	private List<String> peersName = new ArrayList<String>();
-	private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
+	private List<String> peersName = new ArrayList<>();
+	private List<WifiP2pDevice> peers = new ArrayList<>();
 	private int isGroupeOwner;
 	private InetAddress ownerAddr;
 
@@ -60,6 +61,7 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		String action = intent.getAction();
+		this.deletePersistentGroups(mManager, mChannel);
 
 		/**********************************
 		 Wifi P2P is enabled or disabled
@@ -69,11 +71,14 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
 
 			//check if Wifi P2P is supported
 			int state = intent.getIntExtra(WifiP2pManager.EXTRA_WIFI_STATE, -1);
-			if(state == WifiP2pManager.WIFI_P2P_STATE_ENABLED){
-				Toast.makeText(mActivity, "Wifi P2P is supported by this device", Toast.LENGTH_SHORT).show();
-			} else{
-				Toast.makeText(mActivity, "Wifi P2P is not supported by this device", Toast.LENGTH_SHORT).show();
+			if(state != WifiP2pManager.WIFI_P2P_STATE_ENABLED){
+				WifiManager wifiManager = (WifiManager) mActivity.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+				wifiManager.setWifiEnabled(true);
+//				Toast.makeText(mActivity, "Wifi P2P is supported by this device", Toast.LENGTH_SHORT).show();
 			}
+/*			else{
+				Toast.makeText(mActivity, "Wifi P2P is not supported by this device", Toast.LENGTH_SHORT).show();
+			}*/
 		}
 
 		/**********************************
@@ -101,12 +106,12 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
 				return;
 			}
 			NetworkInfo networkInfo = intent.getParcelableExtra(WifiP2pManager.EXTRA_NETWORK_INFO);
-			if(networkInfo.isConnected()){
+
+			if(networkInfo.isConnected()) {
+
 				mManager.requestConnectionInfo(mChannel, info -> {
 					ownerAddr= info.groupOwnerAddress;
 
-
-					if(UserRepository.getUserRole(mActivity).equals("employee")) {
 						/******************************************************************
 						 The client : create a client thread that connects to the group owner
 						 ******************************************************************/
@@ -114,15 +119,19 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
 						 The GO : create a server thread and accept incoming connections
 						 ******************************************************************/
 
-						if (info.groupFormed && info.isGroupOwner) {
+					/*if (UserRepository.getUserRole(context).equals("employee")) {
+						isGroupeOwner = IS_OWNER;
+						activateGotoAttendance("server");
+					}*/
+
+					if(UserRepository.getUserRole(context).equals("employee")) {
+						if(info.groupFormed && info.isGroupOwner) {
 							isGroupeOwner = IS_OWNER;
 							activateGotoAttendance("server");
 						}
+
 					} else {
-						/******************************************************************
-						 The client : create a client thread that connects to the group owner
-						 ******************************************************************/
-					    if (info.groupFormed) {
+						if(info.groupFormed){
 							isGroupeOwner = IS_CLIENT;
 							activateGotoAttendance("client");
 						}
@@ -132,8 +141,29 @@ public class WifiDirectBroadcastReceiver extends BroadcastReceiver{
 		}
 	}
 
+	private void deletePersistentGroups(WifiP2pManager mManager, WifiP2pManager.Channel mChannel){
+
+
+		try {
+			Method[] methods = WifiP2pManager.class.getMethods();
+			for (Method method : methods) {
+				if (method.getName().equals("deletePersistentGroup")) {
+					// Delete any persistent group
+					for (int netid = 0; netid < 32; netid++) {
+						method.invoke(mManager, mChannel, netid, null);
+					}
+				}
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+
+
 	public void activateGotoAttendance(String role){
 		if(mActivity.getClass() == AttendanceActivity.class) {
+
 
 			((AttendanceActivity)mActivity).getWifiMessageLayout().setVisibility(View.GONE);
 			((AttendanceActivity)mActivity).getSetActivityName().setVisibility(View.VISIBLE);

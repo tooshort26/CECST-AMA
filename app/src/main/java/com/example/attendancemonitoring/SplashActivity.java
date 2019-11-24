@@ -12,6 +12,7 @@ import android.view.WindowManager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.attendancemonitoring.Helpers.SharedPref;
 import com.example.attendancemonitoring.Helpers.UserHelper;
 import com.example.attendancemonitoring.Repositories.UserRepository;
 
@@ -27,12 +28,11 @@ public class SplashActivity extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         this.setActivityToFullScreen();
 
-        new runOnBackground(SplashActivity.this).execute();
-       /* if  ( !SharedPref.getSharedPreferenceBoolean(this,"is_splash_open",false) ) {
+        if  ( !SharedPref.getSharedPreferenceBoolean(this,"is_splash_open",false) ) {
                 mWaitHandler.postDelayed(() -> {
                 //The following code will execute after the 5 seconds.
                 try {
-
+                    new runOnBackground(SplashActivity.this).execute();
                 } catch (Exception ignored) {
                     ignored.printStackTrace();
                 }
@@ -40,7 +40,7 @@ public class SplashActivity extends AppCompatActivity {
 
         } else {
             this.redirect();
-        }*/
+        }
 
 
     }
@@ -79,15 +79,16 @@ public class SplashActivity extends AppCompatActivity {
 
             @Override
             protected void onPreExecute() {
-                // What do you want to execute while the splash screen display.
-                WifiManager wifiManager = (WifiManager)getApplicationContext().getSystemService(Context.WIFI_SERVICE);
-                wifiManager.setWifiEnabled(true);
+
             }
 
             @Override
             protected Void doInBackground(Void... voids) {
                 //SharedPref.setSharedPreferenceBoolean(getApplicationContext(),"is_splash_open",true);
-
+                WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+                if (wifiManager != null) {
+                    wifiManager.setWifiEnabled(false);
+                }
                 return null;
             }
 

@@ -68,7 +68,7 @@ public class AttendsAdapter extends RecyclerView.Adapter<AttendsAdapter.AttendsH
     }
 
     public void displayDuplicate() {
-        Toast.makeText(mContext, "There is student trying to sign other person.", Toast.LENGTH_LONG).show();
+        Toast.makeText(mContext, "There is student trying to double sign.", Toast.LENGTH_LONG).show();
     }
 
 

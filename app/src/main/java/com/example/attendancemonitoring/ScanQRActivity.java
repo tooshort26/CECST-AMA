@@ -209,11 +209,8 @@ public class ScanQRActivity extends Activity implements ZXingScannerView.ResultH
     @Override
     public void onBackPressed() {
         AlertDialog.Builder newDialog = new AlertDialog.Builder(this);
-        newDialog.setTitle("Close chatroom");
-        newDialog.setMessage("Are you sure you want to close this chatroom?\n"
-                + "You will no longer be able to receive messages, and "
-                + "all unsaved media files will be deleted.\n"
-                + "If you are the server, all other users will be disconnected as well.");
+        newDialog.setTitle("Close");
+        newDialog.setMessage("Are you sure you want to close process?");
 
         newDialog.setPositiveButton("Yes", (dialog, which) -> {
             if (AttendanceActivity.server != null) {
@@ -243,7 +240,6 @@ public class ScanQRActivity extends Activity implements ZXingScannerView.ResultH
 
         if (mReceiver.isGroupeOwner() == WifiDirectBroadcastReceiver.IS_CLIENT) {
             Log.e(TAG, "Message hydrated, start SendMessageClient AsyncTask");
-            Log.d("LIST_OF_ANDROID_ID", String.valueOf(listAndroidID));
             new SendMessageClient(ScanQRActivity.this, mReceiver.getOwnerAddr()).executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, mes);
         }
 
@@ -301,6 +297,8 @@ public class ScanQRActivity extends Activity implements ZXingScannerView.ResultH
         } else {
             Toast.makeText(this, "Invalid you already signed this attendance.", Toast.LENGTH_SHORT).show();
         }
+        // Disconnect from the server.
+//        mManager.removeGroup(mChannel, null);
         finish();
      }
 }
